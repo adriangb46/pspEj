@@ -2,7 +2,14 @@ package carreraAmpliada;
 
 import java.io.PrintStream;
 import java.util.concurrent.Semaphore;
-public abstract class Animal extends Thread{
+
+/**
+ * Clase inicial de Animal
+ *
+ * @author Adrián González Blanco
+ * @version 2.0
+ */
+public abstract class Animal implements Runnable{
     String name;
     private Semaphore s;
     private Wind w;
@@ -47,7 +54,8 @@ public abstract class Animal extends Thread{
             return 0;
         }
 
-        if (enTunel && getDistance() + velocidad >= Carrera.INICIO_TUNEL + Carrera.TUNEL_FIN_TUNEL) {
+        if (enTunel && getDistance() + velocidad >= Carrera.INICIO_TUNEL + Carrera.TUNEL_FIN_TUNEL
+                || enTunel && getDistance() + velocidad < Carrera.INICIO_TUNEL ) {
             salirTunel();
         }
 
@@ -75,10 +83,34 @@ public abstract class Animal extends Thread{
                 " ha recorrido " + recorrido + " m y ahora está en: " + distance + " m");
     }
 
+    public int getDistance() {
+        return distance;
+    }
+
+    public void addDistance(int distance) {
+        this.distance += distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    public Wind getWind() {
+        return w;
+    }
+
+    public Semaphore getSemafore() {
+        return s;
+    }
+
+    public String getNombre() {
+        return name;
+    }
+
     /*
 
     codigo largo
-
+    deprecado por refactorizacion superior
     @Override
     public void run() {
         while(getDistance() < Carrera.INICIO_TUNEL + Carrera.TUNEL_FIN_TUNEL){
@@ -123,27 +155,5 @@ public abstract class Animal extends Thread{
     }
      */
 
-    public int getDistance() {
-        return distance;
-    }
 
-    public void addDistance(int distance) {
-        this.distance += distance;
-    }
-
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
-
-    public Wind getWind() {
-        return w;
-    }
-
-    public Semaphore getSemafore() {
-        return s;
-    }
-
-    public String getNombre() {
-        return name;
-    }
 }

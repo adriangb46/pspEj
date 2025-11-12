@@ -16,9 +16,9 @@ public class Carrera {
     static Logger out = new Logger(System.out);
     static Wind w = new Wind(out);
 
-    static Animal t1 = new Tortuga("manolita",s,w,out);
-    static Animal p1 = new Pajaro("juanito",s,w,out);
-    static Animal l1 = new Liebre("saltarina",s,w,out);
+    static Thread t1 = new Thread(new  Tortuga("manolita",s,w,out));
+    static Thread p1 = new Thread(new Pajaro("juanito",s,w,out));
+    static Thread l1 = new Thread(new Liebre("saltarina",s,w,out));
 
     public static void main(String[] args) throws InterruptedException {
         w.start();
