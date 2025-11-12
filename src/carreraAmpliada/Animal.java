@@ -22,6 +22,65 @@ public abstract class Animal extends Thread{
 
     @Override
     public void run() {
+        while (getDistance() < Carrera.INICIO_TUNEL + Carrera.TUNEL_FIN_TUNEL) {
+            try {
+                int recorrido = getVelocidadParaEsteCiclo();
+
+                avanzar(recorrido);
+
+                imprimirEstado(recorrido);
+
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        out.printTuneln("El animal " + name + " ha terminado!!");
+    }
+
+    private int getVelocidadParaEsteCiclo() throws InterruptedException {
+        int velocidad = getVelocity(getWind().isWindy(), enTunel);
+
+        if (!enTunel && getDistance() + velocidad >= Carrera.INICIO_TUNEL) {
+            setDistance(Carrera.INICIO_TUNEL);
+            entrarTunel();
+            return 0;
+        }
+
+        if (enTunel && getDistance() + velocidad >= Carrera.INICIO_TUNEL + Carrera.TUNEL_FIN_TUNEL) {
+            salirTunel();
+        }
+
+        return velocidad;
+    }
+
+    private void entrarTunel() throws InterruptedException {
+        getSemafore().acquire();
+        enTunel = true;
+        out.printTuneln("El animal " + name + " de tipo " + getClass().getSimpleName() + " ha entrado al túnel");
+    }
+
+    private void salirTunel() {
+        enTunel = false;
+        getSemafore().release();
+        out.println("El animal " + name + " ha salido del túnel");
+    }
+
+    private void avanzar(int distancia) {
+        addDistance(distancia);
+    }
+
+    private void imprimirEstado(int recorrido) {
+        out.println("El animal " + name + " de tipo " + getClass().getSimpleName() +
+                " ha recorrido " + recorrido + " m y ahora está en: " + distance + " m");
+    }
+
+    /*
+
+    codigo largo
+
+    @Override
+    public void run() {
         while(getDistance() < Carrera.INICIO_TUNEL + Carrera.TUNEL_FIN_TUNEL){
             try {
                 int rec = this.getVelocity(getWind().isWindy(),enTunel);
@@ -62,6 +121,7 @@ public abstract class Animal extends Thread{
         }
         out.printTuneln("El animal " + name + " ha terminado!!");
     }
+     */
 
     public int getDistance() {
         return distance;
