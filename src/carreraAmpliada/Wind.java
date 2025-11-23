@@ -2,6 +2,12 @@ package carreraAmpliada;
 
 import java.util.Random;
 
+/**
+ * @author Adrián Gonález Blanco
+ * @version 1.0
+ *
+ * posibilidad de meojora poniendo el booleano como statico para aceder sin metodo
+ */
 public class Wind extends Thread{
     public boolean wind;
     public boolean active;
@@ -24,7 +30,7 @@ public class Wind extends Thread{
                 out.printWindln(wind?"Hay viento":"No hay viento");
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                break;
             }
         }
     }
