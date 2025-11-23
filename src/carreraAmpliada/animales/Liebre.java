@@ -61,6 +61,7 @@ public class Liebre extends Animal {
             out.printEventln("La liebre con nombre " + super.getNombre() + " se ha dormido");
             return 0;
         }
+
         /*
         if (super.getDistance() % 10 == 0 && super.getDistance() > 0 && !lastFall && !tunel) {
             fallTrun = 5;

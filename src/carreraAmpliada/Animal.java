@@ -1,6 +1,5 @@
 package carreraAmpliada;
 
-import java.io.PrintStream;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -27,62 +26,6 @@ public abstract class Animal implements Runnable{
 
     public  abstract int getVelocity(boolean wind,boolean tunel);
 
-    @Override
-    public void run() {
-        while (getDistance() < Carrera.INICIO_TUNEL + Carrera.TUNEL_FIN_TUNEL) {
-            try {
-                int recorrido = getVelocidadParaEsteCiclo();
-
-                avanzar(recorrido);
-
-                imprimirEstado(recorrido);
-
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        out.printTuneln("El animal " + name + " ha terminado!!");
-    }
-
-    private int getVelocidadParaEsteCiclo() throws InterruptedException {
-        int velocidad = getVelocity(getWind().isWindy(), enTunel);
-
-        if (!enTunel && getDistance() + velocidad >= Carrera.INICIO_TUNEL) {
-            setDistance(Carrera.INICIO_TUNEL);
-            entrarTunel();
-            return 0;
-        }
-
-        if (enTunel && getDistance() + velocidad >= Carrera.INICIO_TUNEL + Carrera.TUNEL_FIN_TUNEL
-                || enTunel && getDistance() + velocidad < Carrera.INICIO_TUNEL ) {
-            salirTunel();
-        }
-
-        return velocidad;
-    }
-
-    private void entrarTunel() throws InterruptedException {
-        getSemafore().acquire();
-        enTunel = true;
-        out.printTuneln("El animal " + name + " de tipo " + getClass().getSimpleName() + " ha entrado al túnel");
-    }
-
-    private void salirTunel() {
-        enTunel = false;
-        getSemafore().release();
-        out.println("El animal " + name + " ha salido del túnel");
-    }
-
-    private void avanzar(int distancia) {
-        addDistance(distancia);
-    }
-
-    private void imprimirEstado(int recorrido) {
-        out.println("El animal " + name + " de tipo " + getClass().getSimpleName() +
-                " ha recorrido " + recorrido + " m y ahora está en: " + distance + " m");
-    }
-
     public int getDistance() {
         return distance;
     }
@@ -107,53 +50,48 @@ public abstract class Animal implements Runnable{
         return name;
     }
 
-    /*
-
-    codigo largo
-    deprecado por refactorizacion superior
     @Override
     public void run() {
-        while(getDistance() < Carrera.INICIO_TUNEL + Carrera.TUNEL_FIN_TUNEL){
+        while (getDistance() < Carrera.INICIO_TUNEL + Carrera.TUNEL_FIN_TUNEL) {
             try {
-                int rec = this.getVelocity(getWind().isWindy(),enTunel);
-                if(getDistance() + rec < Carrera.INICIO_TUNEL){
-                    if(enTunel){//por el pajarito
+                int rec = this.getVelocity(getWind().isWindy(), enTunel);
+                if (getDistance() + rec < Carrera.INICIO_TUNEL) {
+                    if (enTunel) {//por el pajarito
                         getSemafore().release();
                         enTunel = false;
                         out.println("El animal " + name + " ha salido del tunel");
                     }
                     addDistance(rec);
-                }else if(getDistance() < Carrera.INICIO_TUNEL
-                        && getDistance() + rec >= Carrera.INICIO_TUNEL){
+                } else if (getDistance() < Carrera.INICIO_TUNEL
+                        && getDistance() + rec >= Carrera.INICIO_TUNEL) {
                     setDistance(Carrera.INICIO_TUNEL);
-                    if(!enTunel) {
+                    if (!enTunel) {
                         getSemafore().acquire();
                     }
                     enTunel = true;
                     out.printTuneln("El animal " + name + " de tipo "
-                            + this.getClass().getName() +  " ha entrado al tunel");
-                }else if(getDistance() >= Carrera.INICIO_TUNEL
+                            + this.getClass().getName() + " ha entrado al tunel");
+                } else if (getDistance() >= Carrera.INICIO_TUNEL
                         && getDistance()
                         + (rec = this.getVelocity(false, enTunel))
-                        < Carrera.TUNEL_FIN_TUNEL + Carrera.INICIO_TUNEL){
+                        < Carrera.TUNEL_FIN_TUNEL + Carrera.INICIO_TUNEL) {
                     addDistance(rec);
                 } else if (getDistance() + (rec = this.getVelocity(false, enTunel))
-                        >= Carrera.TUNEL_FIN_TUNEL + Carrera.INICIO_TUNEL ) {
+                        >= Carrera.TUNEL_FIN_TUNEL + Carrera.INICIO_TUNEL) {
                     addDistance(rec);
                     enTunel = false;
                     getSemafore().release();
                     out.println("El animal " + name + " ha salido del tunel");
                 }
-                out.println("El animal " + name + " de tipo " + this.getClass().getName() +
+                out.printTuneln("El animal " + name + " de tipo " + this.getClass().getName() +
                         " ha recorrido " + rec + "m y ahora esta en : " + distance + " m");
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
-        out.printTuneln("El animal " + name + " ha terminado!!");
+        out.printTuneln("El animal " + name + " de clase " +  this.getClass().getSimpleName()
+                + " ha terminado!! y por lo tanto ha ganado");
+        System.exit(0);
     }
-     */
-
-
 }
